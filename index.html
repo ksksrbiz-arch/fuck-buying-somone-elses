@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#06111f">
+<meta name="color-scheme" content="dark">
 <title>FIELD BULLETIN №001 — Skip the Box. Build the Damn Thing.</title>
 <meta name="description" content="An Oregon-specific bootstrap plan for starting a commercial ag drone spraying business — without buying anyone's $50K turnkey program. From Keith @ 1Commerce.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,7 +39,7 @@
   }
 
   *, *::before, *::after { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
   body {
     margin: 0;
     background: var(--navy-deep);
@@ -49,6 +51,10 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
+  img, video { max-width: 100%; display: block; }
+  a { -webkit-tap-highlight-color: rgba(20, 184, 166, 0.18); }
+  button { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--teal-glow); outline-offset: 2px; }
 
   /* topographic background, repeating */
   body::before {
@@ -108,12 +114,15 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
     font-family: var(--mono);
     font-size: 11px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--cream-dim);
-    background: rgba(6,17,31,0.8);
+    background: rgba(6,17,31,0.92);
+    -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
     position: sticky; top: 0;
     z-index: 10;
@@ -123,7 +132,7 @@
     font-weight: 700;
   }
   .meta-bar .brand span { color: var(--gold); }
-  .meta-bar .meta-right { display:flex; gap: 22px; }
+  .meta-bar .meta-right { display:flex; gap: 22px; flex-wrap: wrap; }
   .meta-bar .meta-right span { color: var(--dim); }
   .meta-bar .meta-right b { color: var(--cream); font-weight: 700; }
 
@@ -853,6 +862,361 @@
   .mono { font-family: var(--mono); }
   .terminal { font-family: var(--terminal); font-size: 22px; line-height: 1.2; color: var(--teal-glow); }
 
+  /* ------------------------------------------------------------------ */
+  /*  HERO CTA                                                           */
+  /* ------------------------------------------------------------------ */
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+    padding: 18px 26px;
+    background: var(--orange);
+    color: var(--navy-deep);
+    font-family: var(--display);
+    font-size: 16px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 2px solid var(--navy-deep);
+    box-shadow: 5px 5px 0 var(--teal);
+    transition: transform 0.12s, box-shadow 0.12s;
+  }
+  .hero-cta:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 7px 7px 0 var(--teal);
+  }
+  .hero-cta:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 var(--teal);
+  }
+  .hero-cta .play {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--navy-deep); color: var(--orange);
+    display: grid; place-items: center;
+    font-size: 13px;
+  }
+  .hero-cta .sub {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--navy-deep);
+    opacity: 0.75;
+  }
+  .hero-cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 24px;
+    align-items: center;
+    margin-top: 36px;
+  }
+  .hero-cta-row .alt {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--dim);
+    text-transform: uppercase;
+  }
+  .hero-cta-row .alt a {
+    color: var(--teal-glow);
+    text-decoration-color: var(--teal);
+    text-underline-offset: 3px;
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  VIDEO FACADE (tap-to-load)                                         */
+  /* ------------------------------------------------------------------ */
+  .video-wrap .video-facade {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background:
+      radial-gradient(ellipse at 50% 40%, rgba(20,184,166,0.18) 0%, transparent 55%),
+      radial-gradient(ellipse at 20% 80%, rgba(255,107,26,0.12) 0%, transparent 50%),
+      linear-gradient(180deg, #0a1c33 0%, #06111f 100%);
+    border: 1px solid var(--navy-line);
+    position: relative;
+    padding: 0;
+    cursor: pointer;
+    overflow: hidden;
+    text-align: left;
+  }
+  .video-facade::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image:
+      repeating-linear-gradient(45deg, rgba(20,184,166,0.04) 0 8px, transparent 8px 20px);
+    pointer-events: none;
+  }
+  .video-facade-center {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+    text-align: center;
+  }
+  .video-facade-play {
+    width: 88px; height: 88px;
+    border-radius: 50%;
+    background: var(--orange);
+    color: var(--navy-deep);
+    display: grid; place-items: center;
+    font-size: 34px;
+    border: 3px solid var(--navy-deep);
+    box-shadow: 0 14px 36px rgba(0,0,0,0.55), 0 0 0 4px rgba(255,107,26,0.18);
+    transition: transform 0.15s, box-shadow 0.15s;
+    padding-left: 6px;
+  }
+  .video-facade:hover .video-facade-play,
+  .video-facade:focus-visible .video-facade-play {
+    transform: scale(1.06);
+    box-shadow: 0 18px 44px rgba(0,0,0,0.55), 0 0 0 6px rgba(255,107,26,0.26);
+  }
+  .video-facade-hint {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    color: var(--teal-glow);
+    text-transform: uppercase;
+  }
+  .video-facade-title {
+    position: absolute;
+    left: 16px; bottom: 14px; right: 16px;
+    font-family: var(--display);
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--cream);
+    line-height: 1.2;
+  }
+  .video-facade-dur {
+    position: absolute;
+    top: 14px; right: 16px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    color: var(--cream-dim);
+    background: rgba(6,17,31,0.7);
+    padding: 4px 8px;
+    border: 1px solid var(--navy-line);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  RESPONSIVE TABLE                                                   */
+  /* ------------------------------------------------------------------ */
+  .table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 24px 0;
+    border: 1px solid var(--navy-line);
+    background: var(--navy);
+    position: relative;
+  }
+  .table-scroll .data-table { margin: 0; border: 0; min-width: 640px; }
+  .table-scroll::after {
+    content: "⇢ swipe";
+    position: absolute;
+    right: 10px; top: 10px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    color: var(--dim);
+    text-transform: uppercase;
+    background: var(--navy-deep);
+    padding: 4px 8px;
+    border: 1px solid var(--navy-line);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  @media (max-width: 720px) {
+    .table-scroll::after { opacity: 1; }
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  MOBILE BREAKPOINTS                                                 */
+  /* ------------------------------------------------------------------ */
+  @media (max-width: 900px) {
+    .hero-stat .value { font-size: 36px; }
+  }
+
+  @media (max-width: 720px) {
+    body { font-size: 17px; line-height: 1.55; }
+
+    .topstrip { font-size: 10px; padding: 6px 0; letter-spacing: 0.1em; }
+    .topstrip-inner { gap: 32px; }
+
+    .meta-bar {
+      padding: 10px 16px;
+      font-size: 10px;
+      gap: 8px 14px;
+    }
+    .meta-bar .meta-right { gap: 10px 14px; font-size: 10px; }
+
+    .hero { padding: 36px 18px 48px; }
+    .hero .stamp {
+      font-size: 10px;
+      padding: 5px 10px;
+      margin-bottom: 20px;
+      letter-spacing: 0.14em;
+    }
+    .hero h1 {
+      font-size: clamp(40px, 11.5vw, 68px);
+      line-height: 0.95;
+      margin-bottom: 20px;
+    }
+    .hero h1 .strike::after { top: 50%; height: 5px; }
+    .hero-lede {
+      font-size: 17px;
+      line-height: 1.45;
+      margin-bottom: 28px;
+    }
+    .hero-stats {
+      grid-template-columns: 1fr 1fr;
+      margin-top: 36px;
+    }
+    .hero-stat { padding: 18px 16px; }
+    .hero-stat .label { font-size: 9px; letter-spacing: 0.14em; margin-bottom: 8px; }
+    .hero-stat .value { font-size: 28px; }
+    .hero-stat .sub { font-size: 9px; letter-spacing: 0.06em; margin-top: 6px; }
+
+    section { padding: 56px 18px; }
+    .section-num { font-size: 10px; margin-bottom: 10px; gap: 10px; }
+    .section-num::before { width: 20px; }
+    .section-title {
+      font-size: clamp(28px, 8vw, 44px);
+      margin-bottom: 14px;
+    }
+    .section-sub { font-size: 16px; margin-bottom: 28px; }
+
+    .keith-note {
+      padding: 26px 22px 22px;
+      margin: 36px 0;
+      font-size: 16.5px;
+      line-height: 1.55;
+      transform: none;
+    }
+    .keith-note::before {
+      left: 14px; top: -12px;
+      font-size: 9px; padding: 5px 10px;
+      transform: rotate(-1deg);
+    }
+    .keith-note::after { display: none; }
+    .keith-note .sig { font-size: 20px; }
+
+    .tldr-grid { gap: 16px; }
+    .tldr-card { padding: 20px 22px; }
+    .tldr-card .num { font-size: 44px; }
+    .tldr-card h3 { font-size: 16px; }
+    .tldr-card p { font-size: 15px; }
+
+    .two-col { gap: 28px; }
+    .prose p { font-size: 16.5px; margin-bottom: 14px; }
+
+    .video-wrap { padding: 14px; }
+    .video-wrap::before {
+      left: 14px; top: -11px;
+      font-size: 10px; padding: 3px 8px;
+    }
+    .video-meta {
+      font-size: 10px;
+      gap: 8px;
+      letter-spacing: 0.08em;
+    }
+    .video-facade-play {
+      width: 72px; height: 72px;
+      font-size: 28px;
+      border-width: 2px;
+    }
+    .video-facade-hint { font-size: 10px; }
+    .video-facade-title { font-size: 12px; bottom: 10px; left: 12px; right: 12px; }
+    .video-facade-dur { font-size: 10px; top: 10px; right: 10px; padding: 3px 7px; }
+
+    .callout { padding: 16px 18px; }
+    .callout p { font-size: 15px; }
+
+    .data-table { font-size: 13px; }
+    .data-table th, .data-table td { padding: 10px 12px; }
+
+    .catch22 { padding: 24px 18px; }
+    .catch22-flow { gap: 14px; }
+    .catch22-arrow { transform: rotate(90deg); font-size: 20px; }
+    .catch22-node { padding: 16px 14px; }
+    .catch22-node b { font-size: 12px; }
+    .catch22-node span { font-size: 12px; }
+
+    .vs-block { gap: 12px; margin: 28px 0 20px; }
+    .vs-card { padding: 26px 22px; }
+    .vs-card .price { font-size: 48px; }
+    .vs-card .label { font-size: 10px; letter-spacing: 0.16em; }
+    .vs-divider { font-size: 24px; padding: 8px 0; }
+
+    .roadmap-step { padding: 20px 18px; }
+    .roadmap-step h4 { font-size: 15px; }
+    .roadmap-step p { font-size: 13px; }
+
+    .checklist li { padding: 14px 0 14px 32px; font-size: 15.5px; }
+    .checklist li::before { top: 10px; font-size: 22px; }
+    .checklist li small { font-size: 13px; line-height: 1.5; }
+
+    .bigquote { padding: 44px 18px; margin: 48px auto; }
+    .bigquote p { font-size: clamp(22px, 6.8vw, 36px); }
+    .bigquote .attr { font-size: 10px; letter-spacing: 0.14em; }
+
+    .download {
+      padding: 26px 22px;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      text-align: left;
+    }
+    .download h3 { font-size: 20px; }
+    .download p { font-size: 15px; }
+    .download a.btn {
+      width: 100%;
+      text-align: center;
+      padding: 18px 22px;
+      font-size: 15px;
+      box-shadow: 3px 3px 0 var(--navy-deep);
+    }
+    .download a.btn:hover {
+      box-shadow: 5px 5px 0 var(--navy-deep);
+    }
+
+    footer { padding: 44px 18px 32px; }
+    .footer-grid { gap: 32px; }
+    .sig-block .sig { font-size: 36px; }
+    .sig-block .who { font-size: 12px; }
+    .sig-block p { font-size: 14px; }
+
+    .colophon {
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      gap: 10px;
+      margin-top: 32px;
+    }
+
+    .hero-cta {
+      padding: 16px 20px;
+      font-size: 14px;
+      box-shadow: 4px 4px 0 var(--teal);
+    }
+    .hero-cta-row { gap: 12px 18px; margin-top: 28px; }
+  }
+
+  @media (max-width: 420px) {
+    .hero h1 { font-size: clamp(34px, 12vw, 52px); }
+    .hero-stats { grid-template-columns: 1fr; }
+    .hero-stat .value { font-size: 34px; }
+    .vs-card .price { font-size: 42px; }
+    .tldr-card .num { font-size: 40px; }
+    .hero-cta { width: 100%; justify-content: center; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .topstrip-inner { animation: none; }
+    *, *::before, *::after { transition: none !important; }
+  }
+
 </style>
 </head>
 <body>
@@ -893,6 +1257,14 @@
   <p class="hero-lede">
     nuWay's "we'll set you up with everything" pitch isn't a scam. It's a <em>dealer flywheel</em> selling DJI margin + paperwork hand-holding. You're a fabricator. I run an ag-tech holding company. We both have LLCs. Two Oregon dudes do not need to pay them $50K to start an ag-drone spray business — we need three farmers, a used drone, and a weekend in the shop.
   </p>
+
+  <div class="hero-cta-row">
+    <a href="#watch-1" class="hero-cta">
+      <span class="play">▶</span>
+      <span>Watch the 90-sec version</span>
+    </a>
+    <span class="alt">or — <a href="#next">skip to what I need from you this week →</a></span>
+  </div>
 
   <div class="hero-stats">
     <div class="hero-stat">
@@ -970,13 +1342,23 @@
   <h2 class="section-title">The <span class="accent">whole pitch</span>, distilled.</h2>
   <p class="section-sub">Faster than reading the rest. If you only have 90 seconds before your shift, watch this and skim the roadmap at the bottom.</p>
 
-  <div class="video-wrap">
-    <video controls preload="metadata" poster="">
-      <source src="Ag_Drone_Bootstrap_Plan.mp4" type="video/mp4">
-      Your browser doesn't support embedded video. <a href="Ag_Drone_Bootstrap_Plan.mp4" style="color: var(--teal);">Download the file directly</a>.
-    </video>
+  <div class="video-wrap" data-video-src="ag_drone_bootstrap_plan.mp4" data-video-type="video/mp4">
+    <button class="video-facade" type="button" aria-label="Play — The whole pitch, distilled (90 seconds)">
+      <span class="video-facade-dur" aria-hidden="true">01:30</span>
+      <span class="video-facade-center" aria-hidden="true">
+        <span class="video-facade-play">▶</span>
+        <span class="video-facade-hint">Tap to play</span>
+      </span>
+      <span class="video-facade-title" aria-hidden="true">The whole pitch, distilled — 90 sec</span>
+    </button>
+    <noscript>
+      <video controls preload="none" playsinline style="width:100%;aspect-ratio:16/9;background:#000;">
+        <source src="ag_drone_bootstrap_plan.mp4" type="video/mp4">
+        <a href="ag_drone_bootstrap_plan.mp4" style="color: var(--teal);">Download the video</a>
+      </video>
+    </noscript>
     <div class="video-meta">
-      <span>FILE: <b>Ag_Drone_Bootstrap_Plan.mp4</b></span>
+      <span>FILE: <b>ag_drone_bootstrap_plan.mp4</b></span>
       <span>DURATION: <b>~01:30</b></span>
       <span>SOURCE: <b>NotebookLM / KEITH</b></span>
     </div>
@@ -997,7 +1379,7 @@
       <p><strong>Eastern Oregon wheat</strong> is the long play if you want broad-acre throughput. Less competition, bigger fields, lower per-acre but way better daily revenue.</p>
     </div>
     <div>
-      <table class="data-table">
+      <table class="data-table" style="min-width:0;">
         <thead>
           <tr><th>Crop</th><th>$/ac</th></tr>
         </thead>
@@ -1061,6 +1443,7 @@
   <h2 class="section-title">What the bootstrapper <span class="accent">actually buys.</span></h2>
   <p class="section-sub">DJI's tariff situation makes prices a moving target — confirm with the dealer. These are the real numbers as of Q1 2026.</p>
 
+  <div class="table-scroll">
   <table class="data-table">
     <thead>
       <tr>
@@ -1102,6 +1485,7 @@
       </tr>
     </tbody>
   </table>
+  </div>
 
   <div class="two-col" style="margin-top: 40px;">
     <div class="prose">
@@ -1143,6 +1527,7 @@
     </div>
   </div>
 
+  <div class="table-scroll">
   <table class="data-table">
     <thead>
       <tr><th>Line item</th><th>Low</th><th>High</th><th>Notes</th></tr>
@@ -1160,6 +1545,7 @@
       <tr class="total"><td>TOTAL BOOTSTRAP</td><td class="num">~$40,600</td><td class="num">~$75,200</td><td>Target: ~$50K with used T40</td></tr>
     </tbody>
   </table>
+  </div>
 
   <div class="callout" style="margin-top: 24px;">
     <div class="callout-label">$ Financing</div>
@@ -1179,13 +1565,23 @@
   <h2 class="section-title">If you want the <span class="accent">long-form</span> walkthrough.</h2>
   <p class="section-sub">This one goes deeper into the regulatory stack, the unit economics, and the software flow (mission planning → execute → analyze → invoice). Watch when you have 10 min.</p>
 
-  <div class="video-wrap">
-    <video controls preload="metadata">
-      <source src="Starting_an_Ag_Drone_Business.mp4" type="video/mp4">
-      Your browser doesn't support embedded video. <a href="Starting_an_Ag_Drone_Business.mp4" style="color: var(--teal);">Download the file directly</a>.
-    </video>
+  <div class="video-wrap" data-video-src="starting_an_ag_drone_business.mp4" data-video-type="video/mp4">
+    <button class="video-facade" type="button" aria-label="Play — Long-form walkthrough (6 to 8 minutes)">
+      <span class="video-facade-dur" aria-hidden="true">~07:00</span>
+      <span class="video-facade-center" aria-hidden="true">
+        <span class="video-facade-play">▶</span>
+        <span class="video-facade-hint">Tap to play</span>
+      </span>
+      <span class="video-facade-title" aria-hidden="true">Long-form walkthrough — ~7 min</span>
+    </button>
+    <noscript>
+      <video controls preload="none" playsinline style="width:100%;aspect-ratio:16/9;background:#000;">
+        <source src="starting_an_ag_drone_business.mp4" type="video/mp4">
+        <a href="starting_an_ag_drone_business.mp4" style="color: var(--teal);">Download the video</a>
+      </video>
+    </noscript>
     <div class="video-meta">
-      <span>FILE: <b>Starting_an_Ag_Drone_Business.mp4</b></span>
+      <span>FILE: <b>starting_an_ag_drone_business.mp4</b></span>
       <span>DURATION: <b>~6–8 min</b></span>
       <span>SOURCE: <b>NotebookLM / KEITH</b></span>
     </div>
@@ -1269,7 +1665,7 @@
       <h3>The Agricultural Drone Playbook</h3>
       <p>Navigating regulations, equipment, and economics for aerial applicators. 15 pages. About 21MB.</p>
     </div>
-    <a class="btn" href="Precision_Drone_Playbook.pdf" download>↓ Download PDF</a>
+    <a class="btn" href="precision_drone_playbook.pdf" download>↓ Download PDF</a>
   </div>
 </section>
 
@@ -1334,6 +1730,40 @@
     <span>v1.0 / 04.23.2026 / NO WARRANTY, JUST DOING THE READING FOR YOU</span>
   </div>
 </footer>
+
+<script>
+  // Click-to-load video facade — saves ~40MB of mobile bandwidth for users who never tap play.
+  (function () {
+    var facades = document.querySelectorAll('.video-facade');
+    for (var i = 0; i < facades.length; i++) {
+      facades[i].addEventListener('click', function (e) {
+        var btn = e.currentTarget;
+        var wrap = btn.closest('.video-wrap');
+        if (!wrap) return;
+        var src = wrap.getAttribute('data-video-src');
+        var type = wrap.getAttribute('data-video-type') || 'video/mp4';
+        if (!src) return;
+        var v = document.createElement('video');
+        v.controls = true;
+        v.autoplay = true;
+        v.preload = 'auto';
+        v.setAttribute('playsinline', '');
+        v.setAttribute('webkit-playsinline', '');
+        v.style.width = '100%';
+        v.style.aspectRatio = '16 / 9';
+        v.style.background = '#000';
+        v.style.border = '1px solid var(--navy-line)';
+        var s = document.createElement('source');
+        s.src = src;
+        s.type = type;
+        v.appendChild(s);
+        btn.parentNode.replaceChild(v, btn);
+        var p = v.play();
+        if (p && typeof p.catch === 'function') { p.catch(function () {}); }
+      });
+    }
+  })();
+</script>
 
 </body>
 </html>
