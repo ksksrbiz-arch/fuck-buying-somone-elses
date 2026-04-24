@@ -1,0 +1,1339 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FIELD BULLETIN №001 — Skip the Box. Build the Damn Thing.</title>
+<meta name="description" content="An Oregon-specific bootstrap plan for starting a commercial ag drone spraying business — without buying anyone's $50K turnkey program. From Keith @ 1Commerce.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,800&family=JetBrains+Mono:wght@400;500;700&family=VT323&display=swap" rel="stylesheet">
+<style>
+  /* ------------------------------------------------------------------ */
+  /*  THEME                                                              */
+  /* ------------------------------------------------------------------ */
+  :root {
+    --navy-deep:    #06111f;
+    --navy:         #0a1c33;
+    --navy-card:    #112a48;
+    --navy-line:    #1c3a5e;
+    --cream:        #f0e6d0;
+    --cream-dim:    #d9c7a3;
+    --paper:        #f4ead4;
+    --teal:         #14b8a6;
+    --teal-glow:    #2dd4bf;
+    --gold:         #d4a017;
+    --gold-bright:  #f0bf3a;
+    --orange:       #ff6b1a;
+    --orange-dim:   #c4501a;
+    --red:          #e74c3c;
+    --dim:          #8da3c0;
+    --dim-2:        #5d7693;
+
+    --display: 'Archivo Black', system-ui, sans-serif;
+    --body:    'Fraunces', Georgia, serif;
+    --mono:    'JetBrains Mono', ui-monospace, monospace;
+    --terminal:'VT323', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--navy-deep);
+    color: var(--cream);
+    font-family: var(--body);
+    font-size: 18px;
+    line-height: 1.55;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* topographic background, repeating */
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(20,184,166,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 90%, rgba(212,160,23,0.05) 0%, transparent 50%),
+      repeating-linear-gradient(0deg, transparent 0 39px, rgba(255,255,255,0.012) 39px 40px),
+      repeating-linear-gradient(90deg, transparent 0 39px, rgba(255,255,255,0.012) 39px 40px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  /* paper grain overlay */
+  body::after {
+    content:""; position: fixed; inset:0; pointer-events:none; z-index: 1;
+    background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.18 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    opacity: 0.5;
+    mix-blend-mode: overlay;
+  }
+
+  main, header, section, footer { position: relative; z-index: 2; }
+
+  /* ------------------------------------------------------------------ */
+  /*  TOP STRIP — TX/RX header bar                                       */
+  /* ------------------------------------------------------------------ */
+  .topstrip {
+    background: var(--orange);
+    color: var(--navy-deep);
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    padding: 7px 0;
+    text-transform: uppercase;
+    overflow: hidden;
+    border-bottom: 1px solid #000;
+  }
+  .topstrip-inner {
+    display: flex;
+    gap: 48px;
+    white-space: nowrap;
+    animation: ticker 60s linear infinite;
+  }
+  .topstrip span::before { content: "● "; color: var(--navy-deep); }
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  HEADER / META BAR                                                  */
+  /* ------------------------------------------------------------------ */
+  .meta-bar {
+    border-bottom: 2px solid var(--teal);
+    padding: 14px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cream-dim);
+    background: rgba(6,17,31,0.8);
+    backdrop-filter: blur(8px);
+    position: sticky; top: 0;
+    z-index: 10;
+  }
+  .meta-bar .brand {
+    color: var(--teal);
+    font-weight: 700;
+  }
+  .meta-bar .brand span { color: var(--gold); }
+  .meta-bar .meta-right { display:flex; gap: 22px; }
+  .meta-bar .meta-right span { color: var(--dim); }
+  .meta-bar .meta-right b { color: var(--cream); font-weight: 700; }
+
+  /* ------------------------------------------------------------------ */
+  /*  HERO                                                               */
+  /* ------------------------------------------------------------------ */
+  .hero {
+    padding: 60px 32px 80px;
+    max-width: 1280px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .hero .stamp {
+    display: inline-block;
+    padding: 6px 14px;
+    border: 2px solid var(--orange);
+    color: var(--orange);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    transform: rotate(-1.5deg);
+    background: rgba(255,107,26,0.05);
+  }
+  .hero h1 {
+    font-family: var(--display);
+    font-size: clamp(48px, 8vw, 120px);
+    line-height: 0.92;
+    margin: 0 0 24px;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: var(--cream);
+  }
+  .hero h1 .accent-orange { color: var(--orange); }
+  .hero h1 .accent-teal   { color: var(--teal); }
+  .hero h1 .accent-gold   { color: var(--gold); }
+  .hero h1 .strike {
+    position: relative;
+    color: var(--dim);
+  }
+  .hero h1 .strike::after {
+    content: "";
+    position: absolute;
+    left: -4%; right: -4%;
+    top: 48%;
+    height: 6px;
+    background: var(--red);
+    transform: rotate(-2deg);
+  }
+
+  .hero-lede {
+    font-family: var(--body);
+    font-size: clamp(20px, 2vw, 26px);
+    line-height: 1.4;
+    color: var(--cream-dim);
+    max-width: 820px;
+    margin-bottom: 48px;
+    font-weight: 400;
+  }
+  .hero-lede em { color: var(--teal-glow); font-style: italic; font-weight: 500; }
+
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1px;
+    background: var(--navy-line);
+    border: 1px solid var(--navy-line);
+    margin-top: 48px;
+  }
+  .hero-stat {
+    background: var(--navy);
+    padding: 24px 22px;
+  }
+  .hero-stat .label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 10px;
+  }
+  .hero-stat .value {
+    font-family: var(--display);
+    font-size: 44px;
+    line-height: 1;
+    color: var(--cream);
+  }
+  .hero-stat .value.teal { color: var(--teal-glow); }
+  .hero-stat .value.gold { color: var(--gold-bright); }
+  .hero-stat .value.orange { color: var(--orange); }
+  .hero-stat .sub {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--dim);
+    margin-top: 8px;
+    letter-spacing: 0.04em;
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  SECTION SCAFFOLDING                                                */
+  /* ------------------------------------------------------------------ */
+  section {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 80px 32px;
+    border-top: 1px dashed var(--navy-line);
+  }
+  .section-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--orange);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .section-num::before {
+    content: "";
+    width: 28px; height: 1px;
+    background: var(--orange);
+  }
+  .section-title {
+    font-family: var(--display);
+    font-size: clamp(34px, 5vw, 64px);
+    line-height: 0.95;
+    margin: 0 0 18px;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    color: var(--cream);
+  }
+  .section-title .accent { color: var(--teal); }
+  .section-sub {
+    font-family: var(--body);
+    font-size: 20px;
+    color: var(--cream-dim);
+    max-width: 780px;
+    margin: 0 0 40px;
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  KEITH'S NOTE — handwritten / personal sticker                      */
+  /* ------------------------------------------------------------------ */
+  .keith-note {
+    background: var(--paper);
+    color: var(--navy-deep);
+    border-radius: 2px;
+    padding: 32px 36px 28px;
+    max-width: 720px;
+    margin: 48px auto;
+    font-family: var(--body);
+    font-size: 18px;
+    line-height: 1.6;
+    box-shadow:
+      0 22px 40px rgba(0,0,0,0.45),
+      inset 0 0 0 1px rgba(0,0,0,0.06);
+    transform: rotate(-0.6deg);
+    position: relative;
+  }
+  .keith-note::before {
+    content: "FROM KEITH'S DESK";
+    position: absolute;
+    top: -14px; left: 24px;
+    background: var(--orange);
+    color: var(--navy-deep);
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    padding: 6px 12px;
+    transform: rotate(-1.5deg);
+  }
+  .keith-note::after {
+    content: "✗";
+    position: absolute;
+    top: 14px; right: 26px;
+    color: rgba(231,76,60,0.18);
+    font-family: var(--display);
+    font-size: 84px;
+    line-height: 1;
+    pointer-events: none;
+  }
+  .keith-note p { margin: 0 0 14px; }
+  .keith-note p:last-child { margin-bottom: 0; }
+  .keith-note strong { background: var(--gold-bright); padding: 0 4px; }
+  .keith-note .sig {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 600;
+    font-size: 22px;
+    margin-top: 18px;
+    color: var(--orange-dim);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  TLDR LIST                                                          */
+  /* ------------------------------------------------------------------ */
+  .tldr-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-top: 32px;
+  }
+  .tldr-card {
+    background: var(--navy-card);
+    border-left: 4px solid var(--teal);
+    padding: 24px 26px;
+    position: relative;
+  }
+  .tldr-card .num {
+    font-family: var(--display);
+    font-size: 56px;
+    line-height: 1;
+    color: var(--teal);
+    margin-bottom: 8px;
+  }
+  .tldr-card.gold { border-color: var(--gold); }
+  .tldr-card.gold .num { color: var(--gold-bright); }
+  .tldr-card.orange { border-color: var(--orange); }
+  .tldr-card.orange .num { color: var(--orange); }
+  .tldr-card.red { border-color: var(--red); }
+  .tldr-card.red .num { color: var(--red); }
+  .tldr-card h3 {
+    font-family: var(--display);
+    font-size: 18px;
+    text-transform: uppercase;
+    margin: 0 0 10px;
+    color: var(--cream);
+    letter-spacing: 0.02em;
+  }
+  .tldr-card p {
+    margin: 0;
+    font-size: 16px;
+    color: var(--cream-dim);
+    line-height: 1.5;
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  VIDEO BLOCKS                                                        */
+  /* ------------------------------------------------------------------ */
+  .video-wrap {
+    background: var(--navy);
+    border: 1px solid var(--navy-line);
+    padding: 22px;
+    margin: 24px 0;
+    position: relative;
+  }
+  .video-wrap::before {
+    content: "▶ TAPE";
+    position: absolute;
+    top: -12px; left: 22px;
+    background: var(--teal);
+    color: var(--navy-deep);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    padding: 4px 10px;
+  }
+  .video-wrap video {
+    display: block;
+    width: 100%;
+    background: #000;
+    border: 1px solid var(--navy-line);
+  }
+  .video-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 14px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--dim);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .video-meta b { color: var(--cream); }
+
+  /* ------------------------------------------------------------------ */
+  /*  TWO-COL LAYOUT                                                     */
+  /* ------------------------------------------------------------------ */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 48px;
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .two-col { grid-template-columns: 1fr; gap: 32px; }
+  }
+
+  .prose p { margin: 0 0 16px; }
+  .prose p:last-child { margin-bottom: 0; }
+  .prose strong { color: var(--gold-bright); font-weight: 600; }
+  .prose em { color: var(--teal-glow); font-style: italic; }
+  .prose a { color: var(--teal-glow); text-decoration-color: var(--teal); text-underline-offset: 3px; }
+  .prose a:hover { color: var(--cream); }
+
+  /* ------------------------------------------------------------------ */
+  /*  CALLOUT BLOCKS                                                     */
+  /* ------------------------------------------------------------------ */
+  .callout {
+    background: rgba(20, 184, 166, 0.08);
+    border: 1px solid var(--teal);
+    padding: 20px 22px;
+    margin: 24px 0;
+    position: relative;
+  }
+  .callout.warn {
+    background: rgba(255, 107, 26, 0.08);
+    border-color: var(--orange);
+  }
+  .callout.danger {
+    background: rgba(231, 76, 60, 0.08);
+    border-color: var(--red);
+  }
+  .callout-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+  .callout.warn .callout-label   { color: var(--orange); }
+  .callout.danger .callout-label { color: var(--red); }
+  .callout p { margin: 0; color: var(--cream-dim); font-size: 16px; }
+  .callout p strong { color: var(--cream); }
+
+  /* ------------------------------------------------------------------ */
+  /*  DATA TABLE                                                         */
+  /* ------------------------------------------------------------------ */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--mono);
+    font-size: 14px;
+    margin: 24px 0;
+    background: var(--navy);
+  }
+  .data-table th {
+    background: var(--navy-deep);
+    color: var(--orange);
+    font-weight: 700;
+    text-align: left;
+    padding: 12px 14px;
+    border-bottom: 2px solid var(--orange);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .data-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--navy-line);
+    color: var(--cream-dim);
+  }
+  .data-table tr:hover td { background: rgba(20,184,166,0.04); }
+  .data-table td.num {
+    color: var(--gold-bright);
+    text-align: right;
+    font-weight: 500;
+  }
+  .data-table td.num.high { color: var(--orange); }
+  .data-table td.num.low { color: var(--teal-glow); }
+  .data-table tr.total td {
+    border-top: 2px solid var(--gold);
+    border-bottom: none;
+    background: var(--navy-deep);
+    color: var(--cream);
+    font-weight: 700;
+  }
+  .data-table tr.total td.num { color: var(--gold-bright); font-size: 16px; }
+
+  /* ------------------------------------------------------------------ */
+  /*  BIG VS COMPARISON                                                  */
+  /* ------------------------------------------------------------------ */
+  .vs-block {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 20px;
+    align-items: center;
+    margin: 40px 0 24px;
+  }
+  @media (max-width: 700px) { .vs-block { grid-template-columns: 1fr; } }
+  .vs-card {
+    padding: 36px 28px;
+    border: 1px solid var(--navy-line);
+    text-align: center;
+  }
+  .vs-card.bad {
+    background: rgba(231,76,60,0.05);
+    border-color: var(--red);
+  }
+  .vs-card.good {
+    background: rgba(20,184,166,0.07);
+    border-color: var(--teal);
+  }
+  .vs-card .label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .vs-card.bad .label  { color: var(--red); }
+  .vs-card.good .label { color: var(--teal-glow); }
+  .vs-card .price {
+    font-family: var(--display);
+    font-size: 64px;
+    line-height: 1;
+    margin-bottom: 12px;
+    color: var(--cream);
+  }
+  .vs-card.good .price { color: var(--teal-glow); }
+  .vs-card.bad .price  { color: var(--red); }
+  .vs-card .desc { font-size: 14px; color: var(--cream-dim); }
+  .vs-divider {
+    font-family: var(--display);
+    font-size: 32px;
+    color: var(--orange);
+    text-align: center;
+  }
+  @media (max-width: 700px) { .vs-divider { padding: 12px 0; } }
+
+  /* ------------------------------------------------------------------ */
+  /*  CATCH-22 DIAGRAM                                                   */
+  /* ------------------------------------------------------------------ */
+  .catch22 {
+    background: var(--navy);
+    border: 1px solid var(--navy-line);
+    padding: 36px 32px;
+    margin: 32px 0;
+    position: relative;
+  }
+  .catch22-flow {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    gap: 16px;
+    align-items: center;
+    text-align: center;
+    margin: 24px 0;
+  }
+  @media (max-width: 800px) {
+    .catch22-flow { grid-template-columns: 1fr; }
+    .catch22-arrow { transform: rotate(90deg); }
+  }
+  .catch22-node {
+    padding: 18px 14px;
+    border: 1px solid var(--navy-line);
+    background: var(--navy-deep);
+  }
+  .catch22-node.problem { border-color: var(--red); background: rgba(231,76,60,0.05); }
+  .catch22-node.solution { border-color: var(--teal); background: rgba(20,184,166,0.05); }
+  .catch22-node b {
+    display: block;
+    font-family: var(--display);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+    color: var(--cream);
+  }
+  .catch22-node span {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--dim);
+    line-height: 1.4;
+  }
+  .catch22-arrow {
+    font-family: var(--mono);
+    color: var(--orange);
+    font-size: 24px;
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  ROADMAP                                                            */
+  /* ------------------------------------------------------------------ */
+  .roadmap {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
+    margin: 32px 0;
+    position: relative;
+  }
+  @media (max-width: 1000px) {
+    .roadmap { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 600px) {
+    .roadmap { grid-template-columns: 1fr; }
+  }
+  .roadmap-step {
+    background: var(--navy-card);
+    padding: 24px 20px;
+    border-right: 1px solid var(--navy-deep);
+    border-bottom: 1px solid var(--navy-deep);
+    position: relative;
+    border-top: 4px solid var(--teal);
+  }
+  .roadmap-step:nth-child(2) { border-top-color: var(--gold); }
+  .roadmap-step:nth-child(3) { border-top-color: var(--orange); }
+  .roadmap-step:nth-child(4) { border-top-color: var(--teal-glow); }
+  .roadmap-step:nth-child(5) { border-top-color: var(--gold-bright); }
+  .roadmap-step .ph {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--orange);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .roadmap-step .week {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--dim);
+    margin-bottom: 14px;
+  }
+  .roadmap-step h4 {
+    font-family: var(--display);
+    font-size: 16px;
+    text-transform: uppercase;
+    margin: 0 0 10px;
+    color: var(--cream);
+    line-height: 1.1;
+  }
+  .roadmap-step p {
+    font-size: 13px;
+    color: var(--cream-dim);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  CHECKLIST                                                          */
+  /* ------------------------------------------------------------------ */
+  .checklist {
+    list-style: none;
+    padding: 0;
+    margin: 24px 0;
+  }
+  .checklist li {
+    padding: 14px 0 14px 36px;
+    border-bottom: 1px dashed var(--navy-line);
+    position: relative;
+    font-size: 16px;
+    color: var(--cream-dim);
+  }
+  .checklist li::before {
+    content: "□";
+    position: absolute;
+    left: 0; top: 12px;
+    font-family: var(--mono);
+    font-size: 24px;
+    color: var(--teal);
+  }
+  .checklist li b { color: var(--cream); font-weight: 600; font-family: var(--mono); font-size: 14px; }
+  .checklist li small { display:block; font-size: 13px; color: var(--dim); margin-top: 4px; }
+
+  /* ------------------------------------------------------------------ */
+  /*  BIG QUOTE                                                          */
+  /* ------------------------------------------------------------------ */
+  .bigquote {
+    text-align: center;
+    padding: 60px 32px;
+    border-top: 4px solid var(--orange);
+    border-bottom: 4px solid var(--orange);
+    margin: 60px auto;
+    background: linear-gradient(180deg, transparent, rgba(255,107,26,0.05), transparent);
+  }
+  .bigquote p {
+    font-family: var(--display);
+    font-size: clamp(28px, 4vw, 52px);
+    line-height: 1.1;
+    text-transform: uppercase;
+    color: var(--cream);
+    margin: 0 auto 16px;
+    max-width: 980px;
+    letter-spacing: -0.01em;
+  }
+  .bigquote p .h { background: var(--gold-bright); color: var(--navy-deep); padding: 0 8px; }
+  .bigquote .attr {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--orange);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  DOWNLOAD BLOCK                                                     */
+  /* ------------------------------------------------------------------ */
+  .download {
+    background: var(--paper);
+    color: var(--navy-deep);
+    padding: 36px 32px;
+    margin: 40px 0;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    align-items: center;
+  }
+  @media (max-width: 700px) { .download { grid-template-columns: 1fr; } }
+  .download h3 {
+    font-family: var(--display);
+    text-transform: uppercase;
+    margin: 0 0 6px;
+    font-size: 24px;
+    color: var(--navy-deep);
+  }
+  .download p {
+    margin: 0;
+    color: #2a3f5f;
+    font-size: 16px;
+  }
+  .download a.btn {
+    background: var(--orange);
+    color: var(--navy-deep);
+    text-decoration: none;
+    padding: 18px 30px;
+    font-family: var(--display);
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: 2px solid var(--navy-deep);
+    box-shadow: 4px 4px 0 var(--navy-deep);
+    transition: transform 0.1s, box-shadow 0.1s;
+    display: inline-block;
+    white-space: nowrap;
+  }
+  .download a.btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--navy-deep);
+  }
+  .download a.btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0 0 0 var(--navy-deep);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  FOOTER                                                             */
+  /* ------------------------------------------------------------------ */
+  footer {
+    margin-top: 60px;
+    background: var(--navy-deep);
+    border-top: 4px double var(--teal);
+    padding: 60px 32px 40px;
+  }
+  .footer-grid {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 48px;
+  }
+  @media (max-width: 800px) { .footer-grid { grid-template-columns: 1fr; gap: 32px; } }
+  .sig-block .sig {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 600;
+    font-size: 44px;
+    color: var(--orange);
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+  .sig-block .who {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--cream);
+    margin-bottom: 18px;
+  }
+  .sig-block .who b { color: var(--teal-glow); }
+  .sig-block p {
+    font-size: 15px;
+    color: var(--cream-dim);
+    margin: 0;
+    max-width: 380px;
+  }
+  .footer-col h5 {
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--orange);
+    margin: 0 0 14px;
+  }
+  .footer-col a {
+    display: block;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--cream-dim);
+    text-decoration: none;
+    padding: 4px 0;
+    border-bottom: 1px dotted var(--navy-line);
+  }
+  .footer-col a:hover { color: var(--teal-glow); }
+
+  .colophon {
+    max-width: 1280px;
+    margin: 40px auto 0;
+    padding-top: 24px;
+    border-top: 1px solid var(--navy-line);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--dim-2);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .colophon .stamp {
+    color: var(--orange);
+    border: 1px solid var(--orange);
+    padding: 4px 10px;
+    transform: rotate(-2deg);
+    display: inline-block;
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  UTILITY                                                            */
+  /* ------------------------------------------------------------------ */
+  .mono { font-family: var(--mono); }
+  .terminal { font-family: var(--terminal); font-size: 22px; line-height: 1.2; color: var(--teal-glow); }
+
+</style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="topstrip">
+  <div class="topstrip-inner">
+    <span>FIELD BULLETIN №001</span>
+    <span>RE: that nuWay video you sent</span>
+    <span>both LLCs already exist</span>
+    <span>Oregon-specific intel inside</span>
+    <span>do not buy the box</span>
+    <span>FIELD BULLETIN №001</span>
+    <span>RE: that nuWay video you sent</span>
+    <span>both LLCs already exist</span>
+    <span>Oregon-specific intel inside</span>
+    <span>do not buy the box</span>
+  </div>
+</div>
+
+<!-- META BAR -->
+<div class="meta-bar">
+  <div class="brand">1COMMERCE<span>///</span>FIELD-OPS</div>
+  <div class="meta-right">
+    <span>TX:</span> <b>KEITH @ CANBY, OR</b>
+    <span>RX:</span> <b>YOU</b>
+    <span>04.23.2026</span>
+  </div>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="stamp">RE: THE INSTAGRAM VIDEO YOU JUST SENT ME</div>
+  <h1>
+    Skip the <span class="strike">$50K box.</span><br>
+    <span class="accent-orange">Build the</span> <span class="accent-teal">damn</span> <span class="accent-gold">thing.</span>
+  </h1>
+  <p class="hero-lede">
+    nuWay's "we'll set you up with everything" pitch isn't a scam. It's a <em>dealer flywheel</em> selling DJI margin + paperwork hand-holding. You're a fabricator. I run an ag-tech holding company. We both have LLCs. Two Oregon dudes do not need to pay them $50K to start an ag-drone spray business — we need three farmers, a used drone, and a weekend in the shop.
+  </p>
+
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="label">Realistic Bootstrap</div>
+      <div class="value teal">$40–55K</div>
+      <div class="sub">DRONE + LICENSE + INSURANCE + DIY RIG</div>
+    </div>
+    <div class="hero-stat">
+      <div class="label">Time to First Legal Spray</div>
+      <div class="value orange">16–20 wk</div>
+      <div class="sub">FAA + ODA + 50hr LOG, START NOW</div>
+    </div>
+    <div class="hero-stat">
+      <div class="label">OR Per-Acre Pricing</div>
+      <div class="value gold">$15–35</div>
+      <div class="sub">GRASS SEED → HAZELNUTS → VINEYARDS</div>
+    </div>
+    <div class="hero-stat">
+      <div class="label">Year 1 Target</div>
+      <div class="value teal">3,000+ ac</div>
+      <div class="sub">~$45K GROSS, COVERS THE NOTE</div>
+    </div>
+  </div>
+</header>
+
+<!-- KEITH'S NOTE -->
+<section style="border-top: none; padding-top: 0;">
+  <div class="keith-note">
+    <p><strong>Yo —</strong></p>
+    <p>I ran a deep research pass with Claude after you sent me the nuWay vid. Pulled the Oregon ODA stack, FAA timelines, real per-acre pricing in the Willamette, the actual operators already working out here (Pratum is overbooked, btw), and what nuWay's "FastPass" actually does and doesn't do.</p>
+    <p>Then I had it cook me a deck and a couple of explainer vids so you can absorb this without reading the whole monster report. Both of those are embedded below. PDF is at the bottom.</p>
+    <p>Bottom line: <strong>the gating constraint is not money or hardware</strong> — it's the 50-hour Oregon aerial flight log + the FAA Part 137 paperwork. Both of those are free. Both take time. Start them this week and we're spraying hazelnuts by April.</p>
+    <div class="sig">— Keith</div>
+  </div>
+</section>
+
+<!-- TLDR -->
+<section id="tldr">
+  <div class="section-num">§01 — The Take</div>
+  <h2 class="section-title">If you read <span class="accent">nothing else</span>, read this.</h2>
+  <p class="section-sub">Five hard takeaways. Everything below this section is just receipts.</p>
+
+  <div class="tldr-grid">
+    <div class="tldr-card">
+      <div class="num">01</div>
+      <h3>Don't validate at $0. Validate at 3 farmers.</h3>
+      <p>Get three verbal commits at $15–25/ac BEFORE you put a dime down. nuWay's funnel skips this on purpose — their revenue is the hardware sale, not your business.</p>
+    </div>
+    <div class="tldr-card gold">
+      <div class="num">02</div>
+      <h3>The bottleneck is Oregon's APA license, not federal.</h3>
+      <p>ODA wants 50 documented flight hours of pesticide application before they grant your Aerial Applicator license — but you can't legally spray pesticide to log them. Solution: log the 50 hrs spraying water/fertilizer/fire retardant.</p>
+    </div>
+    <div class="tldr-card orange">
+      <div class="num">03</div>
+      <h3>The market is not saturated. Pratum is overbooked.</h3>
+      <p>Pratum Co-op out of Salem ran ~19,000 ac in 2023 with 4 drones and openly says they have "more work than we know what to do with." The March–April hazelnut EFB window is your opening.</p>
+    </div>
+    <div class="tldr-card">
+      <div class="num">04</div>
+      <h3>The DIY trailer is your real edge.</h3>
+      <p>nuWay sells a $20K+ trailer. You weld for fun. A 22ft flatbed + 200gal poly tank + 12V pump rig is a weekend build for $3–5K. That alone is a third of the "turnkey premium."</p>
+    </div>
+    <div class="tldr-card red">
+      <div class="num">05</div>
+      <h3>nuWay's FastPass does not solve Oregon.</h3>
+      <p>$800 FastPass legally subs you under their Part 137 — useful in TX/IA/OH where federal is the only blocker. <b>In Oregon you still need the APA license.</b> The federal piece is the easy part here.</p>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEO 1 -->
+<section id="watch-1">
+  <div class="section-num">§02 — Watch this first (90 sec)</div>
+  <h2 class="section-title">The <span class="accent">whole pitch</span>, distilled.</h2>
+  <p class="section-sub">Faster than reading the rest. If you only have 90 seconds before your shift, watch this and skim the roadmap at the bottom.</p>
+
+  <div class="video-wrap">
+    <video controls preload="metadata" poster="">
+      <source src="Ag_Drone_Bootstrap_Plan.mp4" type="video/mp4">
+      Your browser doesn't support embedded video. <a href="Ag_Drone_Bootstrap_Plan.mp4" style="color: var(--teal);">Download the file directly</a>.
+    </video>
+    <div class="video-meta">
+      <span>FILE: <b>Ag_Drone_Bootstrap_Plan.mp4</b></span>
+      <span>DURATION: <b>~01:30</b></span>
+      <span>SOURCE: <b>NotebookLM / KEITH</b></span>
+    </div>
+  </div>
+</section>
+
+<!-- MARKET -->
+<section id="market">
+  <div class="section-num">§03 — Oregon Market Reality</div>
+  <h2 class="section-title">Who's <span class="accent">actually paying</span>, and for what.</h2>
+  <p class="section-sub">This isn't theory. These are crops and acres being sprayed by drone in Oregon right now, with active demand exceeding supply in two specific windows.</p>
+
+  <div class="two-col">
+    <div class="prose">
+      <p>The Willamette Valley is the obvious entry point. <strong>Hazelnuts</strong> are the killer crop — preventive Eastern Filbert Blight sprays in March–April when ground rigs literally can't get into the orchard because of mud. Several thousand acres of demand, fast-growing because of the new EFB-resistant varieties going in.</p>
+      <p><strong>Vineyards</strong> are real but tricky — Willamette Pinot blocks are small (20–100ac), trellised tight, and want premium drift control. Premium pricing ($22–35/ac) but lower throughput. Adelsheim is already piloting drones.</p>
+      <p>The under-the-radar play is <strong>grass seed and clover in the South Valley</strong> — winter herbicide passes when fields are too wet to mud through with a ground rig. That's where Pratum is doing most of their volume.</p>
+      <p><strong>Eastern Oregon wheat</strong> is the long play if you want broad-acre throughput. Less competition, bigger fields, lower per-acre but way better daily revenue.</p>
+    </div>
+    <div>
+      <table class="data-table">
+        <thead>
+          <tr><th>Crop</th><th>$/ac</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Grass seed / clover / wheat</td><td class="num low">$14–18</td></tr>
+          <tr><td>Hazelnuts</td><td class="num">$18–25</td></tr>
+          <tr><td>Christmas trees</td><td class="num">$20–30</td></tr>
+          <tr><td>Vineyards (Willamette)</td><td class="num high">$22–35</td></tr>
+          <tr><td>Blueberries / blackberries</td><td class="num">$18–28</td></tr>
+          <tr class="total"><td>Realistic season target</td><td class="num">3,000 ac</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout">
+        <div class="callout-label">▲ Pratum Co-op (Salem)</div>
+        <p>4 drones, 5 pilots, ~19,000 ac in 2023. Quote: <em>"more work than we know what to do with."</em> Their overflow is your first revenue.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THE CATCH-22 -->
+<section id="catch22">
+  <div class="section-num">§04 — Oregon's Catch-22</div>
+  <h2 class="section-title">The <span class="accent">real bottleneck</span>, and the workaround.</h2>
+  <p class="section-sub">Oregon law explicitly classifies drones as "aircraft" for pesticide purposes. That triggers the Aerial Pesticide Applicator (APA) license — and the APA has a paradox baked in.</p>
+
+  <div class="catch22">
+    <div class="catch22-flow">
+      <div class="catch22-node">
+        <b>Step 1</b>
+        <span>Pass ODA Laws &amp; Safety + Ag category exam. Get the CPA (Commercial Pesticide Applicator) license. <b style="color:var(--teal-glow);">Easy. ~3 weeks.</b></span>
+      </div>
+      <div class="catch22-arrow">→</div>
+      <div class="catch22-node problem">
+        <b>The Wall</b>
+        <span>To get the <em>aerial</em> endorsement (APA) you need <b style="color:var(--red);">50 documented flight hours of pesticide application</b>. But you can't legally apply pesticide without the APA. <b style="color:var(--red);">Chicken &amp; egg.</b></span>
+      </div>
+      <div class="catch22-arrow">→</div>
+      <div class="catch22-node solution">
+        <b>The Workaround</b>
+        <span>Log 50 hrs spraying <em>water, fertilizer, or fire retardant</em> on ODA's "Time in Service" form. Counts. <b style="color:var(--teal-glow);">~3 weeks of focused flying.</b></span>
+      </div>
+    </div>
+
+    <div class="callout warn" style="margin-top: 32px;">
+      <div class="callout-label">⚠ This is the move</div>
+      <p>Order the drone <b>week 1</b> if cash allows. Start logging hours on water sims while your federal paperwork is in the FAA queue. By the time Part 137 lands (~12 weeks), you're at 50 hrs and ready to file the APA. <b>That's how 16 weeks happens. Skip this and you're at 30+ weeks.</b></p>
+    </div>
+  </div>
+
+  <div class="callout danger">
+    <div class="callout-label">▼ What nuWay's FastPass does NOT solve</div>
+    <p>FastPass ($800) lets you sub under nuWay's Part 137 while your federal app is pending. That closes the <b>FAA</b> gap. It does <b>not</b> close the Oregon <b>APA</b> gap — ODA explicitly says only the licensed individual can apply, even under supervision. So FastPass is useful in 30 other states, mostly useless to us here.</p>
+  </div>
+</section>
+
+<!-- HARDWARE -->
+<section id="hardware">
+  <div class="section-num">§05 — The Iron</div>
+  <h2 class="section-title">What the bootstrapper <span class="accent">actually buys.</span></h2>
+  <p class="section-sub">DJI's tariff situation makes prices a moving target — confirm with the dealer. These are the real numbers as of Q1 2026.</p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Platform</th>
+        <th>Payload</th>
+        <th>Acres/hr</th>
+        <th>Best for</th>
+        <th>Price (US dealer)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b style="color:var(--cream);">DJI Agras T25</b></td>
+        <td>5.2 gal</td>
+        <td>27</td>
+        <td>Specialty / spot apps</td>
+        <td class="num low">~$10K</td>
+      </tr>
+      <tr>
+        <td><b style="color:var(--teal-glow);">DJI Agras T40 (used)</b></td>
+        <td>10.5 gal</td>
+        <td>40</td>
+        <td>The bootstrap workhorse</td>
+        <td class="num low">$10–14K</td>
+      </tr>
+      <tr>
+        <td><b style="color:var(--cream);">DJI Agras T50 (new RTF)</b></td>
+        <td>10.5 gal</td>
+        <td>40</td>
+        <td>Sweet spot for OR</td>
+        <td class="num">$25–32K</td>
+      </tr>
+      <tr>
+        <td><b style="color:var(--cream);">DJI Agras T100 (kit)</b></td>
+        <td>20+ gal</td>
+        <td>60+</td>
+        <td>Eastern OR wheat / overkill for vineyards</td>
+        <td class="num high">$36–43K</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="two-col" style="margin-top: 40px;">
+    <div class="prose">
+      <p><strong>My recommendation: used T40 or new T50.</strong> The T100 is overkill for what we'd actually be flying in the Willamette — small hazelnut blocks, vineyard rows, broken topography. Save the $15K on the platform, put it into batteries and a second drone next year if the work is there.</p>
+      <p><strong>Used market is real.</strong> Controller.com and TractorHouse have dealer demos with &lt;10 acres on them, ~$22K. Watch for the season-end (Jan) and post-harvest (Nov) listings.</p>
+      <p><strong>Battery economics is the real conversation.</strong> Plan for 3–4 batteries minimum, plus a 14kW generator and fast chargers. Battery swap throughput is the actual bottleneck once you're in the air — not flight time.</p>
+    </div>
+    <div>
+      <div class="callout">
+        <div class="callout-label">★ Trailer / Tender Rig</div>
+        <p style="margin-bottom: 10px;"><b>nuWay sells theirs at ~$20K.</b> A 22ft flatbed + 200gal poly nurse tank + chemical inductor + 12V pump + hose reel + plumbing is a <b>$3–5K weekend build</b>. You weld. I'll help you spec it.</p>
+        <p>Saves ~$15K on day one. That's the single biggest cost cut in the plan.</p>
+      </div>
+      <div class="callout warn">
+        <div class="callout-label">⚠ Insurance reality check</div>
+        <p>Standard commercial drone policies <b>exclude chemical application</b>. You need FAR 137 coverage with at minimum LC/RC chemical liability. Get FAC if you're doing herbicide. <b>$4–9K/yr</b> for a single-drone op. Carriers: BWI, SkyWatch, Falcon, Global.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VS -->
+<section id="vs">
+  <div class="section-num">§06 — The Numbers</div>
+  <h2 class="section-title">Bootstrap <span class="accent">vs</span> Turnkey, side-by-side.</h2>
+  <p class="section-sub">Same drone, same FAA paperwork, same business at the end. The difference is who pockets the markup.</p>
+
+  <div class="vs-block">
+    <div class="vs-card bad">
+      <div class="label">Turnkey "Setup-in-a-Box"</div>
+      <div class="price">$50–60K</div>
+      <div class="desc">Drone + branded trailer + paperwork hand-holding + coaching + LLC services + you-still-have-to-fly-it</div>
+    </div>
+    <div class="vs-divider">VS</div>
+    <div class="vs-card good">
+      <div class="label">Bootstrapped (us)</div>
+      <div class="price">$40–55K</div>
+      <div class="desc">Same drone (cheaper dealer) + DIY trailer + DIY federal paperwork + ODA fees + insurance + first-month working capital</div>
+    </div>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr><th>Line item</th><th>Low</th><th>High</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Drone (used T40 → new T50 RTF)</td><td class="num low">$22,000</td><td class="num">$32,000</td><td>Sweet spot for OR work</td></tr>
+      <tr><td>Extra batteries (3–4) + chargers</td><td class="num low">$4,000</td><td class="num">$8,000</td><td>Throughput, not flight time, is the bottleneck</td></tr>
+      <tr><td>14kW generator</td><td class="num low">$3,500</td><td class="num">$5,500</td><td>D14000iE or open-frame Honda</td></tr>
+      <tr><td>DIY tender trailer (we build it)</td><td class="num low">$3,000</td><td class="num">$8,000</td><td>vs $20K turnkey rig</td></tr>
+      <tr><td>Federal: 2× Part 107 + medical + 44807 + 137 legal</td><td class="num low">$1,200</td><td class="num">$5,000</td><td>DIY saves $2–4K vs consultants</td></tr>
+      <tr><td>Oregon ODA stack (CPA + CPO + APA, both)</td><td class="num low">$400</td><td class="num">$700</td><td>Trivial. Exams $58 ea.</td></tr>
+      <tr><td>Commercial drone insurance ($1M + chem)</td><td class="num low">$4,000</td><td class="num">$9,000</td><td>FAR 137 LC/RC at minimum</td></tr>
+      <tr><td>PPE / spare parts / RTK base / sim chemicals</td><td class="num low">$2,000</td><td class="num">$5,000</td><td>50hr sim flying needs water + tank</td></tr>
+      <tr><td>Workers comp + accounting + misc business</td><td class="num low">$500</td><td class="num">$2,000</td><td>OR workers comp is mandatory</td></tr>
+      <tr class="total"><td>TOTAL BOOTSTRAP</td><td class="num">~$40,600</td><td class="num">~$75,200</td><td>Target: ~$50K with used T40</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout" style="margin-top: 24px;">
+    <div class="callout-label">$ Financing</div>
+    <p><b>AgDirect</b> (Farm Credit System, in OR through American AgCredit) finances ag drones at the dealer. 2–7yr terms. <b>20% down on a $25K rig = ~$400/mo.</b> One 200-acre hazelnut contract covers six months of payments. Oregon also has <b>no sales tax</b> — saves us 7–10% vs WA on every purchase.</p>
+  </div>
+</section>
+
+<!-- BIG QUOTE -->
+<div class="bigquote">
+  <p>The core requirement isn't a <span class="h">$50K business-in-a-box.</span><br>It's one retail drone, federal exemptions, and three verbal commitments from local farmers.</p>
+  <div class="attr">— THE WHOLE GAME, IN ONE LINE</div>
+</div>
+
+<!-- VIDEO 2 -->
+<section id="watch-2">
+  <div class="section-num">§07 — The deeper version</div>
+  <h2 class="section-title">If you want the <span class="accent">long-form</span> walkthrough.</h2>
+  <p class="section-sub">This one goes deeper into the regulatory stack, the unit economics, and the software flow (mission planning → execute → analyze → invoice). Watch when you have 10 min.</p>
+
+  <div class="video-wrap">
+    <video controls preload="metadata">
+      <source src="Starting_an_Ag_Drone_Business.mp4" type="video/mp4">
+      Your browser doesn't support embedded video. <a href="Starting_an_Ag_Drone_Business.mp4" style="color: var(--teal);">Download the file directly</a>.
+    </video>
+    <div class="video-meta">
+      <span>FILE: <b>Starting_an_Ag_Drone_Business.mp4</b></span>
+      <span>DURATION: <b>~6–8 min</b></span>
+      <span>SOURCE: <b>NotebookLM / KEITH</b></span>
+    </div>
+  </div>
+</section>
+
+<!-- CUSTOMERS -->
+<section id="customers">
+  <div class="section-num">§08 — How We Get Paid</div>
+  <h2 class="section-title">First customers, in <span class="accent">priority order.</span></h2>
+  <p class="section-sub">Three channels. The first one alone could fill our season.</p>
+
+  <ul class="checklist">
+    <li>
+      <b>CHANNEL 01 → Sub through ag retailers (Wilbur-Ellis, Nutrien, Wilco Valley Agronomics)</b>
+      <small>They already have the grower book. They sub drone work for ~$2/ac margin. This is how Pratum got started. Walk into the Tangent Wilbur-Ellis or Nutrien McMinnville with a card the day APA hits.</small>
+    </li>
+    <li>
+      <b>CHANNEL 02 → Pratum Co-op overflow + direct grower outreach (March–April hazelnut EFB)</b>
+      <small>Pratum's openly overbooked. Their March–April hazelnut window is the single highest-leverage week in the year. Hit Nut Growers Society of Oregon ($100/yr membership, summer tour, winter meeting). Also Hazelnut Growers Bargaining Association in Mt. Angel — 300+ active growers.</small>
+    </li>
+    <li>
+      <b>CHANNEL 03 → Trade shows: Oregon Wine Symposium (Feb), NGS events</b>
+      <small>OWA Symposium: Feb 3–4, 2026 at the Oregon Convention Center, ~1,200 attendees, 750+ wineries represented. Booth or sponsor for max exposure once we're licensed. Cheap relative to a season of vineyard work.</small>
+    </li>
+    <li>
+      <b>CHANNEL 04 → USDA NRCS EQIP Practice Code 595 (sweetener for the grower)</b>
+      <small>Cost-share grant covers 40–90% of qualifying drone purchases for the farmer. Doesn't apply to us as a service business — but pitch it to growers as a way to offset their chemical bill, makes our quote look cheaper. Jan 15 batching deadline.</small>
+    </li>
+  </ul>
+</section>
+
+<!-- ROADMAP -->
+<section id="roadmap">
+  <div class="section-num">§09 — The Roadmap</div>
+  <h2 class="section-title">Five phases. <span class="accent">~16 weeks</span> to first legal spray.</h2>
+  <p class="section-sub">If we start this month and stay aggressive on the 50hr log, we're spraying for paying customers in the March–April hazelnut window.</p>
+
+  <div class="roadmap">
+    <div class="roadmap-step">
+      <div class="ph">PHASE 01</div>
+      <div class="week">WEEKS 1–2</div>
+      <h4>Validate</h4>
+      <p>Three verbal commits from local farmers at $15–25/ac BEFORE any hardware. Call hazelnut growers in Yamhill / Polk / Washington counties. No commits = kill it.</p>
+    </div>
+    <div class="roadmap-step">
+      <div class="ph">PHASE 02</div>
+      <div class="week">WEEKS 2–6</div>
+      <h4>License Stack</h4>
+      <p>Both of us pass Part 107. Pass ODA Laws + Ag category exams. File 44807 exemption (~10wk) + Form 8710-3 immediately after. Apply for CPO under one of the LLCs.</p>
+    </div>
+    <div class="roadmap-step">
+      <div class="ph">PHASE 03</div>
+      <div class="week">WEEK 6+</div>
+      <h4>Hardware + 50hr log</h4>
+      <p>Buy used T40 or new T50. Build the trailer in your shop. Start logging 50hr APA flight time on water sims. This is the long pole — start the day the drone arrives.</p>
+    </div>
+    <div class="roadmap-step">
+      <div class="ph">PHASE 04</div>
+      <div class="week">WEEKS 8–16</div>
+      <h4>Federal + APA</h4>
+      <p>44807 lands → file 8710-3 → Part 137 issued (~10 wk). 50hr log complete → take Oregon Aerial exam → APA issued. We are now legal to spray in Oregon.</p>
+    </div>
+    <div class="roadmap-step">
+      <div class="ph">PHASE 05</div>
+      <div class="week">YEAR 2</div>
+      <h4>Compound</h4>
+      <p>Add cover crop seeding (fall), thermal livestock monitoring, NDVI/multispectral scouting (winter). Stretch revenue beyond the 4-month spray season. Second drone if work supports it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DOWNLOAD -->
+<section id="download">
+  <div class="section-num">§10 — The Long Form</div>
+  <h2 class="section-title">The <span class="accent">whole playbook</span>, as a PDF.</h2>
+  <p class="section-sub">15-slide visual deck covering everything above. Print it, throw it in the truck, mark it up.</p>
+
+  <div class="download">
+    <div>
+      <h3>The Agricultural Drone Playbook</h3>
+      <p>Navigating regulations, equipment, and economics for aerial applicators. 15 pages. About 21MB.</p>
+    </div>
+    <a class="btn" href="Precision_Drone_Playbook.pdf" download>↓ Download PDF</a>
+  </div>
+</section>
+
+<!-- ACTION -->
+<section id="next">
+  <div class="section-num">§11 — Next Move</div>
+  <h2 class="section-title">What I need from <span class="accent">you, this week.</span></h2>
+  <p class="section-sub">Three things. None of them cost money. All of them have to happen before we order anything.</p>
+
+  <ul class="checklist">
+    <li>
+      <b>1. Call 5 farmers in Yamhill / Polk / Washington / Marion counties.</b>
+      <small>Hazelnut growers preferred. Pitch: "We're starting drone spray for spring 2026, what do you currently pay per acre, and would you try us at $X?" We need 3 yeses to move forward.</small>
+    </li>
+    <li>
+      <b>2. Order the FAA Part 107 study guide. Block 3 weeks for prep.</b>
+      <small>$175 exam, 60 multiple choice, 70% to pass. Pilot Institute or The Drone U courses are fine. I'll do mine in parallel — we both need it.</small>
+    </li>
+    <li>
+      <b>3. Decide which LLC takes the CPO license.</b>
+      <small>Whichever one bills the customer needs the Commercial Pesticide Operator. If we run revenue through one and you sub to me (or vice versa), we save a license fee. Talk on Sunday and decide.</small>
+    </li>
+  </ul>
+
+  <div class="bigquote" style="margin: 60px 0 0;">
+    <p>Hit me up when you've made the calls.<br><span class="h">Then we order the drone.</span></p>
+    <div class="attr">— KEITH @ 1COMMERCE / FIELD-OPS</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="sig-block">
+      <div class="sig">— Keith</div>
+      <div class="who"><b>KEITH J. SKAGGS JR.</b> / CEO, 1COMMERCE LLC / CANBY, OR</div>
+      <p>This was researched, written, and stitched together with Claude. The take, the framing, and the willingness to call BS on a $50K box-in-a-box are mine. The numbers are sourced — every claim has a primary citation in the long-form report.</p>
+    </div>
+
+    <div class="footer-col">
+      <h5>Primary Sources</h5>
+      <a href="https://www.oregon.gov/oda/pesticides/licensing/Pages/aerial-applicator-licensing.aspx" target="_blank">ODA Aerial Applicator</a>
+      <a href="https://www.oregon.gov/oda/Documents/Publications/PesticidesPARC/Drones-Pesticide-Licensing.pdf" target="_blank">ODA Drone Pesticide PDF</a>
+      <a href="https://www.faa.gov/uas/advanced_operations/dispensing_chemicals" target="_blank">FAA Part 137 + UAS</a>
+      <a href="https://www.faa.gov/uas/advanced_operations/certification/section_44807" target="_blank">FAA §44807 Exemption</a>
+      <a href="https://www.agaviation.org/wp-content/uploads/2024/08/137-Certification-Guide.pdf" target="_blank">NAAA 137 Cert Guide (PDF)</a>
+    </div>
+
+    <div class="footer-col">
+      <h5>OR Channels</h5>
+      <a href="https://www.oregonfb.org/post/rise-of-the-drones-another-ag-innovation" target="_blank">Pratum Co-op (Salem)</a>
+      <a href="https://www.oregonwinegrowers.org/symposium/" target="_blank">Oregon Wine Symposium</a>
+      <a href="https://members.oregonhazelnuts.org/" target="_blank">Nut Growers Society</a>
+      <a href="https://www.wilco.coop/" target="_blank">Wilco Cooperative</a>
+      <a href="https://www.agdirect.com/" target="_blank">AgDirect Financing</a>
+    </div>
+  </div>
+
+  <div class="colophon">
+    <span>© 2026 1COMMERCE LLC // CANBY, OREGON // FIELD-OPS DIVISION</span>
+    <span class="stamp">FIELD BULLETIN №001 // BOOTSTRAP APPROVED</span>
+    <span>v1.0 / 04.23.2026 / NO WARRANTY, JUST DOING THE READING FOR YOU</span>
+  </div>
+</footer>
+
+</body>
+</html>
